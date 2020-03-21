@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>MYSQL CRUD</title>
+        <title>POSTGRES CRUD</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -27,7 +27,7 @@
                         <br/>
                         <div class="row" id="listofusersdiv" style="margin-bottom: 30px;">
                             <div class="col-md-1"></div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-12">
                                 <h3>User List</h3>
                                 <div id="listofusers">
                                 </div>
@@ -66,7 +66,7 @@
                                                 <label for="password">Password:</label>
                                             </div>
                                             <div class="col-md-4" >
-                                                <input type="password" class="form-control" id="aupassword" placeholder="Enter password" name="aupassword" value="">
+                                                <input type="text" class="form-control" id="aupassword" placeholder="Enter password" name="aupassword" value="">
                                             </div>
                                         </div>
                                     </div>                
@@ -105,7 +105,7 @@
                                                 <label for="username">Userid :</label>
                                             </div>
                                             <div class="col-md-4" >
-                                                <select class="form-control" id="euusername" placeholder="Enter User Name">
+                                                <select class="form-control" onchange="getUser();" id="euusername" placeholder="Enter User Name">
                                             
                                                 </select>
                                                 <!-- <input type="text" class="form-control" id="euusername"   name="username" > -->
@@ -118,7 +118,7 @@
                                                 <label for="password">Password :</label>
                                             </div>
                                             <div class="col-md-4" >
-                                                    <input type="password" class="form-control" id="eupassword" placeholder="Enter password" name="password">
+                                                    <input type="text" class="form-control" id="eupassword" placeholder="Enter password" name="password">
                                             </div>
                                             </div>
                                     </div>
@@ -151,7 +151,7 @@
 </style>
 
 <script>
-    let apiUrl = 'https://mklubricants-api.herokuapp.com';
+    let apiUrl = window.location.href;
 
     function hideallforms(){
         $('#adduserform').hide();
@@ -192,7 +192,7 @@
 
         $.ajax({
         type: 'POST',
-        url: apiUrl + '/users/register',
+        url: apiUrl + 'users/register',
         data: JSON.stringify(userdata),
         success: function(data) { 
             alert('User added succesfully.');
@@ -219,7 +219,7 @@
 
         $.ajax({
             type: 'PUT',
-            url: apiUrl + '/users/' + userdata.username,
+            url: apiUrl + 'users/' + userdata.username,
             data: JSON.stringify(userdata),
             success: function(data) { 
                 alert('User updated succesfully.');
@@ -239,13 +239,31 @@
     function getUsers(){
         $.ajax({
         type: 'GET',
-        url:  apiUrl + '/users/',
+        url:  apiUrl + 'users/',
         success: function(data) { 
             $('#euusername').html('');
+            $('#euusername').append('<option></option>');
             data.forEach(user => {
                 let selectItem = '<option>' + user.username + '</option>';
                 $('#euusername').append(selectItem);
             });
+        },
+        error:  function(data) { 
+            alert('data: ' + data.responseJSON.message);
+        },
+        contentType: "application/json",
+    });
+    };
+
+    function getUser(){
+        let currUser = $('#euusername').val();
+        $.ajax({
+        type: 'GET',
+        url:  apiUrl + 'users/' + currUser,
+        success: function(data) { 
+            $("#euname").val(data.name);
+            $("#eupassword").val(data.password);
+            $("#euisadmin").prop("checked", data.isadmin);
         },
         error:  function(data) { 
             alert('data: ' + data.responseJSON.message);
@@ -280,7 +298,7 @@
     function updateUserGrid(){ 
         $.ajax({
                 type: 'GET', 
-                url:  apiUrl + '/users',
+                url:  apiUrl + 'users',
                 success: function(data) { 
                     data.forEach(elem =>{
                         if(elem.isadmin){
@@ -290,7 +308,6 @@
                         }
                     })
                     setupGrid(data);
-                    console.log(data)
                     clearAllInputValues();
                 },
                 error:  function(data) { 
@@ -304,5 +321,9 @@
 
     function clearAllInputValues(){
         $(':input').val('');
+    }
+
+    function showdata(){
+        
     }
 </script>
