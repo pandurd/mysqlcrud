@@ -1,12 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 var path = require('path');
-debugger;
 const app = express();
 require('rootpath')();
-const cors = require('cors');
 const errorHandler = require('./middleware/errorhandler');
-//app.use(cors());
 fs = require('fs-extra')
 
 var dir = path.join(__dirname, 'public');
