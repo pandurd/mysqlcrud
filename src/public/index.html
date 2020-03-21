@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>MYSQL CRUD</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./css/dashboard.css?v=5">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css" />
+        <script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row" id="forms">
+                <div class="col-md-8 col-sm-6">
+                    <br/>
+                    <br/>
+
+                    <div>
+                        <button type="button" class="btn btn-success" onclick="adduserform();">Add User</button>
+                        <button type="button" class="btn btn-success" onclick="edituserform();">Edit User</button>
+                        <br/>
+                        <br/>
+                        <div class="row" id="listofusersdiv" style="margin-bottom: 30px;">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-6 col-sm-12">
+                                <h3>User List</h3>
+                                <div id="listofusers">
+                                </div>
+                            </div>         
+                            <br/>
+                            <br/>            
+                        </div>
+                            
+                        <div class="row" id="adduserform">
+                            <div class="container">
+                                <h3>Add New User</h3>
+                                <form>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-2" >
+                                                <label for="name">Name:</label>
+                                            </div>
+                                            <div class="col-md-4" >
+                                                <input type="text" class="form-control" id="auname" placeholder="Enter Name" name="auname">
+                                            </div>    
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-2" >
+                                                <label for="username">Userid:</label>
+                                            </div>
+                                            <div class="col-md-4" >
+                                                <input type="text" class="form-control" id="auusername" placeholder="Enter User Name" name="auusername" value="">
+                                            </div>    
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-2" >
+                                                <label for="password">Password:</label>
+                                            </div>
+                                            <div class="col-md-4" >
+                                                <input type="password" class="form-control" id="aupassword" placeholder="Enter password" name="aupassword" value="">
+                                            </div>
+                                        </div>
+                                    </div>                
+                                        <div class="row">
+                                            <div class="col-md-2" >
+                                                <label for="password">Is Admin:</label>
+                                            </div>
+                                            <div class="col-md-4" >
+                                                <input type="checkbox"  id="auisadmin" name="auisadmin">
+                                            </div>
+                                        </div>              
+                                    <button type="button" class="btn btn-success" onclick="newusersubmit();">Submit</button>
+                                </form>
+                                <br/>
+                                <br/>
+                            </div>
+                        </div>
+
+                        <div class="row" id="edituserform">
+                            <div class="container">
+                                <h3>Edit User</h3>
+                                <form>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-2" >
+                                                <label for="name">Name :</label>
+                                            </div>
+                                            <div class="col-md-4" >
+                                                <input type="text" class="form-control" id="euname" placeholder="Enter Name" name="name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-2" >
+                                                <label for="username">Userid :</label>
+                                            </div>
+                                            <div class="col-md-4" >
+                                                <select class="form-control" id="euusername" placeholder="Enter User Name">
+                                            
+                                                </select>
+                                                <!-- <input type="text" class="form-control" id="euusername"   name="username" > -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-2" >
+                                                <label for="password">Password :</label>
+                                            </div>
+                                            <div class="col-md-4" >
+                                                    <input type="password" class="form-control" id="eupassword" placeholder="Enter password" name="password">
+                                            </div>
+                                            </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-2" >
+                                            <label for="password">Is Admin:</label>
+                                        </div>
+                                        <div class="col-md-4" >
+                                            <input type="checkbox"  id="euisadmin" name="euisadmin">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-success" onclick="editusersubmit();">Submit</button>
+                                </form>
+                                <br/><br/>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<style>
+#forms{
+    height: 75%;
+}
+</style>
+
+<script>
+    let apiUrl = 'https://mklubricants-api.herokuapp.com';
+
+    function hideallforms(){
+        $('#adduserform').hide();
+
+        $('#edituserform').hide();
+        $('#addcustomerform').hide();
+        $('#listofusersdiv').hide()
+    }
+    hideallforms();
+    $('#forms').hide();
+    $('#listofusersdiv').show();
+
+    function adduserform(){
+        hideallforms();
+        $('#adduserform').show();
+    }
+
+    function edituserform(){
+        getUsers();
+        hideallforms();
+        $('#edituserform').show();
+    }
+
+    function showForms(){
+        $('#forms').show();
+    }
+
+    showForms();
+
+
+    function newusersubmit(){
+
+        let userdata = { name : $('#auname').val(),
+        username:  $('#auusername').val(),
+        password:  $('#aupassword').val(),
+        isadmin : $('#auisadmin')[0].checked,
+        }
+
+        $.ajax({
+        type: 'POST',
+        url: apiUrl + '/users/register',
+        data: JSON.stringify(userdata),
+        success: function(data) { 
+            alert('User added succesfully.');
+            hideallforms();
+            $('#listofusersdiv').show();
+            updateUserGrid();
+            clearAllInputValues();
+        },
+        error:  function(data) {      
+            alert('data: ' + data.responseJSON.message);
+        },
+        contentType: "application/json",
+        dataType: 'json'
+    });
+    }
+
+    function editusersubmit(){
+
+        let userdata = { name : $('#euname').val(),
+            username:  $('#euusername').val(),
+            password:  $('#eupassword').val(),
+            isadmin: $('#euisadmin')[0].checked,
+        }
+
+        $.ajax({
+            type: 'PUT',
+            url: apiUrl + '/users/' + userdata.username,
+            data: JSON.stringify(userdata),
+            success: function(data) { 
+                alert('User updated succesfully.');
+                hideallforms();
+                $('#listofusersdiv').show();
+                updateUserGrid();
+                clearAllInputValues();
+            },
+            error:  function(data) { 
+                alert('data: ' + data.responseJSON.message);
+            },
+            contentType: "application/json",
+            dataType: 'json'
+    });
+    };
+
+    function getUsers(){
+        $.ajax({
+        type: 'GET',
+        url:  apiUrl + '/users/',
+        success: function(data) { 
+            $('#euusername').html('');
+            data.forEach(user => {
+                let selectItem = '<option>' + user.username + '</option>';
+                $('#euusername').append(selectItem);
+            });
+        },
+        error:  function(data) { 
+            alert('data: ' + data.responseJSON.message);
+        },
+        contentType: "application/json",
+    });
+    };
+
+    function setupGrid(gridData){
+        document.getElementById('listofusers').innerHTML = '';
+        const grid = new tui.Grid({
+            el: document.getElementById('listofusers'),
+            data: gridData,
+            scrollX: false,
+            scrollY: false,
+            columns: [
+            {
+                header: 'Name',
+                name: 'name'
+            },
+            {
+                header: 'User ID',
+                name: 'username'
+            },
+            {
+                header: 'Is Admin',
+                name: 'isadmin'
+            }]
+        });
+    }
+
+    function updateUserGrid(){ 
+        $.ajax({
+                type: 'GET', 
+                url:  apiUrl + '/users',
+                success: function(data) { 
+                    data.forEach(elem =>{
+                        if(elem.isadmin){
+                            elem.isadmin = "Yes";
+                        } else{
+                            elem.isadmin = "No";
+                        }
+                    })
+                    setupGrid(data);
+                    console.log(data)
+                    clearAllInputValues();
+                },
+                error:  function(data) { 
+                    alert('data: ' + data);
+                },
+                contentType: "application/json",
+            });
+    }
+
+    updateUserGrid();
+
+    function clearAllInputValues(){
+        $(':input').val('');
+    }
+</script>
